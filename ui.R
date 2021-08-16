@@ -63,7 +63,7 @@ fluidPage(
                 )
             ),
             DT::dataTableOutput("table"),
-            strong("*Last Updated August 15, 2021")
+            strong("* Last Updated August 16, 2021")
         )
     )
     
