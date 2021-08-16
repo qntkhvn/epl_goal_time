@@ -2,7 +2,10 @@ library(tidyverse)
 library(shinythemes)
 
 data <- read_csv("goal_min.csv") %>% 
-    mutate(goal_club = ifelse(goal_club == "home", home_club, away_club))
+    select(-goal_score) %>% 
+    mutate(goal_club = ifelse(goal_club == "home", home_club, away_club),
+           minute = factor(minute, levels = c(1:45, paste("45", 1:7, sep = "+"),
+                                              46:90, paste("90", 1:12, sep = "+"))))
 
 fluidPage(
     

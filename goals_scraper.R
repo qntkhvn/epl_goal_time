@@ -1,4 +1,3 @@
-
 library(tidyverse)
 library(rvest)
 library(janitor)
@@ -50,43 +49,36 @@ clean_match_info <- function(match_df) {
   return(match_clean)
 }
 
-
-
-doParallel::registerDoParallel()
+# early seasons with 22 teams and 42 matchweeks
 
 early_list <- list()
 early_seasons <- 1992:1994
-tic()
 for(i in 1:length(early_seasons)) {
   early_list[[i]] <- map_df(1:42, get_match_info, season = early_seasons[i]) %>% 
     mutate(match = map(match, clean_match_info)) %>% 
     unnest(cols = c(match))
 }
-toc()
 
 early_df <- early_list %>% 
   bind_rows()
 
-early_df %>% 
-  count(season)
+# later seasons with 20 teams and 38 matchweeks
 
 later_list <- list()
 later_seasons <- 1995:2020
-tic()
 for(i in 1:length(later_seasons)) {
   later_list[[i]] <- map_df(1:38, get_match_info, season = later_seasons[i]) %>% 
     mutate(match = map(match, clean_match_info)) %>% 
     unnest(cols = c(match))
 }
-toc()
 
 later_df <- later_list %>% 
   bind_rows()
 
-
-
 full_df <- early_df %>% 
   bind_rows(later_df) 
+
+# fix full data, mostly string issues
 
 full_df_clean <- full_df %>% 
   mutate(goal_scorer = ifelse(str_detect(goal_scorer, "\\."), 
@@ -122,49 +114,4 @@ full_df_clean <- full_df %>%
          final_score = str_replace(final_score, "postponed", "2:0"))
 
 full_df_clean %>% 
-  write_csv("~/Desktop/goal_min.csv")
-
-
-
-### 
-
-# url <- "https://www.transfermarkt.us/premier-league/spieltag/wettbewerb/GB1/plus/?saison_id=2002&spieltag=20"
-# 
-# tbl_list <- url %>% 
-#   read_html() %>% 
-#   html_table() %>% 
-#   as_tibble_col(column_name = "tbl") %>%
-#   filter(unlist(map(tbl, ncol)) == 9)
-# 
-# tbl_raw <- tbl_list[[4]] %>% 
-#   remove_empty(which = "cols") %>% 
-#   mutate(across(.cols = everything(), str_squish)) # trim down string
-# 
-# 
-# match_score <- tbl_raw[1, ] %>% 
-#   pivot_longer(cols = everything()) %>% 
-#   transmute(value = str_remove_all(value, "\\s\\(\\d{1,2}.\\)|\\(\\d{1,2}.\\)\\s")) %>% 
-#   filter(!str_detect(value, "^[:upper:]+$|^$")) %>% 
-#   pull(value)
-# 
-# home <- tbl_raw %>% 
-#   select(goal_scorer = X1, minute = X2, goal_score = X3) %>% 
-#   filter(str_detect(minute, "'") & goal_score != "") %>% 
-#   mutate(goal_club = "home")
-# 
-# away <- tbl_raw %>% 
-#   select(goal_scorer = X5, minute = X4, goal_score = X3) %>% 
-#   filter(str_detect(minute, "'") & goal_score != "") %>% 
-#   mutate(goal_club = "away")
-# 
-# home %>% 
-#   bind_rows(away) %>% 
-#   mutate(home_club = match_score[1],
-#          final_score = match_score[2],
-#          away_club = match_score[3])
-# 
-# # goal_scorer = str_sub(goal_scorer, end = str_locate(goal_scorer, "\\.")[, 1] - 2)
-# 
-
-
-
+  write_csv("goal_min.csv")
