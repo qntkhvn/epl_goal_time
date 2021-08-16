@@ -24,6 +24,8 @@ function(input, output) {
     }, 
     rownames = FALSE,
     style = "bootstrap",
+    colnames = c("Season", "Matchweek", "Home Club", "Away Club", 
+                 "Final Score", "Goal Club", "Goal Scorer", "Minute"),
     options = list(pageLength = 25)))
     
     output$downloadData <- downloadHandler(
