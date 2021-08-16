@@ -5,7 +5,6 @@ data <- read_csv("goal_min.csv") %>%
     select(-goal_score)
 
 function(input, output) {
-    # Filter data based on selections
     
     datasetInput <- reactive(data)
     
@@ -22,6 +21,7 @@ function(input, output) {
         }
         data
     }, 
+    
     rownames = FALSE,
     style = "bootstrap",
     colnames = c("Season", "Matchweek", "Home Club", "Away Club", 

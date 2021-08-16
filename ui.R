@@ -4,8 +4,6 @@ library(shinythemes)
 data <- read_csv("goal_min.csv") %>% 
     mutate(goal_club = ifelse(goal_club == "home", home_club, away_club))
 
-
-
 fluidPage(
     
     theme = shinytheme("flatly"),
@@ -38,6 +36,7 @@ fluidPage(
             p("Download the full data"),
             
             downloadButton("downloadData", ".csv")
+            
         ),
         
         mainPanel(
@@ -46,24 +45,28 @@ fluidPage(
                 column(4,
                        selectInput("season",
                                    "Season",
-                                   c("All",
-                                     unique(as.character(data$season))))
+                                   c("All", unique(as.character(data$season))))
                 ),
                 column(4,
                        selectInput("matchweek",
                                    "Matchweek",
-                                   c("All",
-                                     unique(as.character(data$matchweek))))
+                                   c("All", unique(as.character(data$matchweek))))
                 ),
                 column(4,
                        selectInput("goal_club",
                                    "Club",
-                                   c("All",
-                                     sort(unique(as.character(data$goal_club)))))
+                                   c("All", sort(unique(as.character(data$goal_club)))))
                 )
             ),
+            
             DT::dataTableOutput("table"),
-            strong("* Last Updated August 16, 2021")
+            
+            strong("* Last Updated August 16, 2021"),
+            
+            br(),
+            
+            br(),
+            
         )
     )
     
