@@ -116,7 +116,8 @@ full_df_clean <- full_df %>%
                          ifelse(minute == "92'", "90+2'", 
                                 ifelse(minute == "3+1'", "3'",
                                        ifelse(minute == "6+1'", "6'",
-                                              ifelse(minute == "46+1'", "45+1'", minute))))),
+                                              ifelse(minute == "46+1'", "45+1'", 
+                                                     ifelse(minute == "120'", "90+4'", minute)))))),
          minute = str_remove(minute, "'"),
          final_score = str_replace(final_score, "postponed", "2:0"))
 
