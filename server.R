@@ -6,6 +6,13 @@ data <- read_csv("goal_min.csv") %>%
            minute = factor(minute, levels = c(1:45, paste("45", 1:7, sep = "+"),
                                               46:90, paste("90", 1:12, sep = "+"))))
 
+# group_by(season, matchweek, home_club, away_club) %>% 
+# arrange(minute, .by_group = TRUE) %>% 
+# mutate(is_home = cumsum(as.numeric(home_club == goal_club)),
+#        is_away = cumsum(as.numeric(away_club == goal_club))) %>% 
+# filter(str_detect(minute, "90")) %>% 
+# add_count(season, matchweek, home_club, away_club)
+
 function(input, output) {
     
     datasetInput <- reactive(data)
